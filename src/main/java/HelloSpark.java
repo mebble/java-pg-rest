@@ -11,6 +11,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 
 import spark.Spark;
+import com.google.gson.Gson;
 
 public class HelloSpark {
     public static Jdbi connectToDB() {
@@ -23,15 +24,16 @@ public class HelloSpark {
 
     public static void main(String[] args) {
         Jdbi jdbi = connectToDB();
+        Gson gson = new Gson();
+
         Spark.port(3000);
         Spark.staticFiles.location("/public");
+
         Spark.get("/items", (req, res) -> {
             System.out.println("GET /items");
             List<Item> items = jdbi.withExtension(ItemDao.class, dao -> dao.getAllItems());
-            for (Item i : items) {
-                System.out.println(i.name);
-            }
-            return "Hello, worlds!";
+            String json = gson.toJson(items);
+            return json;
         });
     }
 
