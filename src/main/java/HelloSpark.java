@@ -44,9 +44,9 @@ public class HelloSpark {
     }
 
     public static class Item implements java.io.Serializable {
-        public int id;
-        public String name;
-        public int quantity;
+        private int id;
+        private String name;
+        private int quantity;
 
         public Item() {
         }
