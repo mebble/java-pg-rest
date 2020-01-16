@@ -21,4 +21,10 @@ public interface ItemDao {
     @GetGeneratedKeys({"id", "name", "quantity"})
     @RegisterBeanMapper(Item.class)
     Item insertItem(@BindBean Item item);
+
+    @SqlUpdate("INSERT INTO item (id, name, quantity) VALUES (:id, :name, :quantity) " +
+            "ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, quantity = EXCLUDED.quantity")
+    @GetGeneratedKeys({"id", "name", "quantity"})
+    @RegisterBeanMapper(Item.class)
+    Item putItem(@BindBean Item item);
 }

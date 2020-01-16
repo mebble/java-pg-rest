@@ -19,12 +19,17 @@ public class Server {
 
         Spark.get("/items", (req, res) -> {
             System.out.println("GET /items");
+            res.type("application/json");
+
             List<Item> items = conn.withExtension(ItemDao.class, dao -> dao.getAllItems());
             String json = gson.toJson(items);
             return json;
         });
 
         Spark.get("/items/:id", (req, res) -> {
+            System.out.println("GET /items/:id");
+            res.type("application/json");
+
             int id;
             try {
                 id = Integer.parseInt(req.params(":id"));
@@ -45,6 +50,7 @@ public class Server {
 
         Spark.post("/items", (req, res) -> {
             System.out.println("POST /items");
+            res.type("application/json");
 
             Item postedItem;
             try {
@@ -56,6 +62,25 @@ public class Server {
 
             Item insertedItem = conn.withExtension(ItemDao.class, dao -> dao.insertItem(postedItem));
             String json = gson.toJson(insertedItem);
+            return json;
+        });
+
+        Spark.put("/items/:id", (req, res) -> {
+            System.out.println("PUT /items/:id");
+            res.type("application/json");
+
+            Item itemToPut;
+            try {
+                itemToPut = gson.fromJson(req.body(), Item.class);
+                int id = Integer.parseInt(req.params(":id"));
+                itemToPut.setId(id);
+            } catch (Exception e) {
+                res.status(400);
+                return "no";
+            }
+
+            Item itemPut = conn.withExtension(ItemDao.class, dao -> dao.putItem(itemToPut));
+            String json = gson.toJson(itemPut);
             return json;
         });
     }
