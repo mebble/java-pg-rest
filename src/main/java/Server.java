@@ -23,5 +23,13 @@ public class Server {
             String json = gson.toJson(items);
             return json;
         });
+
+        Spark.post("/items", (req, res) -> {
+            System.out.println("POST /items");
+            Item postedItem = gson.fromJson(req.body(), Item.class);
+            Item insertedItem = conn.withExtension(ItemDao.class, dao -> dao.insertItem(postedItem));
+            String json = gson.toJson(insertedItem);
+            return json;
+        });
     }
 }
