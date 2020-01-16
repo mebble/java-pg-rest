@@ -10,7 +10,7 @@ java {
 }
 
 application {
-    mainClassName = 'HelloSpark'
+    mainClassName = 'java_pg_rest.Server'
 }
 
 repositories {
