@@ -24,9 +24,36 @@ public class Server {
             return json;
         });
 
+        Spark.get("/items/:id", (req, res) -> {
+            int id;
+            try {
+                id = Integer.parseInt(req.params(":id"));
+            } catch (Exception e) {
+                res.status(400);
+                return "no";
+            }
+
+            Item item = conn.withExtension(ItemDao.class, dao -> dao.getItem(id));
+            if (item == null) {
+                res.status(404);
+                return "no";
+            }
+
+            String json = gson.toJson(item);
+            return json;
+        });
+
         Spark.post("/items", (req, res) -> {
             System.out.println("POST /items");
-            Item postedItem = gson.fromJson(req.body(), Item.class);
+
+            Item postedItem;
+            try {
+                postedItem = gson.fromJson(req.body(), Item.class);
+            } catch (Exception e) {
+                res.status(400);
+                return "no";  // !! return error body
+            }
+
             Item insertedItem = conn.withExtension(ItemDao.class, dao -> dao.insertItem(postedItem));
             String json = gson.toJson(insertedItem);
             return json;

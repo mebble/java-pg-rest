@@ -13,6 +13,10 @@ public interface ItemDao {
     @RegisterBeanMapper(Item.class)
     List<Item> getAllItems();
 
+    @SqlQuery("SELECT * FROM item WHERE id = ?")
+    @RegisterBeanMapper(Item.class)
+    Item getItem(int id);
+
     @SqlUpdate("INSERT INTO item (name, quantity) VALUES (:name, :quantity)")
     @GetGeneratedKeys({"id", "name", "quantity"})
     @RegisterBeanMapper(Item.class)
