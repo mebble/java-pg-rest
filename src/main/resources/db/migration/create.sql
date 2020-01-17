@@ -1,3 +1,6 @@
+CREATE DATABASE "java_pg_rest";
+\c "java_pg_rest";
+
 CREATE TYPE availability AS ENUM ('present', 'discontinued');
 
 CREATE TABLE item (

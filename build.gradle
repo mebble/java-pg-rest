@@ -30,5 +30,10 @@ dependencies {
 //    implementation 'org.jdbi:jdbi3-core:3.3.0'
 }
 
+task dbSetup(type: Exec) {
+    workingDir 'src/main/resources/db/migration'
+    commandLine 'psql', '-a', '-f', 'create.sql'
+}
+
 description = 'A Java + PostgreSQL REST AP'
 version = '0.1'
