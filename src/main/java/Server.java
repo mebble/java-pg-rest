@@ -83,5 +83,27 @@ public class Server {
             String json = gson.toJson(itemPut);
             return json;
         });
+
+        Spark.delete("/items/:id", (req, res) -> {
+            System.out.println("DELETE /items/:id");
+            res.type("application/json");
+
+            int id;
+            try {
+                id = Integer.parseInt(req.params(":id"));
+            } catch (Exception e) {
+                res.status(400);
+                return "no";
+            }
+
+            boolean success = conn.withExtension(ItemDao.class, dao -> dao.deleteItem(id));
+            if (!success) {
+                res.status(404);
+                return "no";
+            }
+
+            res.status(202);
+            return "yes";
+        });
     }
 }
